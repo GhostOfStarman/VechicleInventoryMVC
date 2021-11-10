@@ -1,0 +1,74 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Oblique;\f1\fswiss\fcharset0 Helvetica;\f2\fswiss\fcharset0 Helvetica-Bold;
+}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww23980\viewh13380\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\i\fs48 \cf0 Vehicle Inventory Project Blueprint\
+
+\f1\i0\fs36 \
+/**************************************************\
+Abstract: To create a program that manages vehicle inventory information for a car dealership. This project teaches me to manipulate information in a database with a backend language such as java and ultimately display information retrieved by queries formally, through a GUI. This helps me understand the fundamental interactions within the user-client-server model of information sharing.\
+**************************************************/\
+\
+//**************************************************\
+Tools/Technologies:\
+Eclipse IDE + java.sql\
+MySQL (server)\
+MySQLWorkbench\
+JavaFX\
+//**************************************************\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f2\b \cf0 Phase 1:
+\f1\b0  Creating a vehicle object.\
+\
+The fields of the object contain data that is relevant to the consumer. Said fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational 
+\f0\i builder design pattern 
+\f1\i0 would help simply and organize the instantiation of the vehicle object.\
+\
+Here I learned more about implementing Enumerated types and because I found out that I will need to convert the data into strings to be stored in the database, I went on about finding out how to do so via the \'93toString() method\'94. This became the second s\
+\
+\
+//\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+
+\f2\b Phase 2:
+\f1\b0  \
+\
+Using jdbc as the driver connector for mySQL, it becomes possible to permanentize and update the states of the vehicle object. \
+\
+Here, I learned how to set up the mySQL server and instances of databases which I can manage through mySQLworkbench. I had familiarized myself with SQL about two years ago so half of this was re-learned. Within databases, I dove into schemas and learned how to populate tables within the schemas. The class VehicleDbComm.java is design to setup a connection to the database from the Eclipse. From here specific queries will be writing to do things such as display data for a specific vehicle(s) and also be able to update the data whenever the user wishes.\
+\
+At the moment of writing this, I have thought about splitting the table I\'92ve created in mySQL into several smaller tables; I\'92ll have to see if there are any advantages to this. \
+\
+\
+//\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+
+\f2\b Phase 3:
+\f1\b0  connect logic to front end.\
+\
+The end goal is to either write a simple client file using CLI to retrieve and display data for the user or, better yet, to design a GUI through a framework such as JavaFX and port the project to a desktop application i.e. .exe file, etc.\
+\
+One idea is to separate the methods by search and update/edit.\
+\
+Search function ideas:\
+-Print all vehicles in DB\
+-Look up by VIN\
+-Look up by category\
+-Combining more than one category\
+-Use some kind of data structure to store each search category and use a function to convert it into a query\
+\
+Update function ideas:\
+-Use VIN to update a specific vehicle\
+\
+//\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+Furthering the project (ideas):\
+\
+-Use (scraping) to utilize a function to grab the (first) image of the car when description is entered (i.e. \'93black 1991 Honda Civic\'94)\
+-Embed to a website\
+-Create graphics for application; find out how to incorporate images (with javaFX?)\
+\
+I\'92m realizing the redundancy of creating a vehicle object and having a database. Perhaps I can store the vehicle objects in a data structure and use them to somehow make my program more efficient? Maybe having \'93two copies\'94 of the same data can provide some insurance incase the database server goes down/is offline.}
