@@ -1,5 +1,8 @@
 package com.vehicles;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 //import java.util.*;
 
 public class Vehicle{
@@ -40,36 +43,36 @@ public class Vehicle{
 	//converting each category into enums was also considered and used before chaning to arrays
 	public Vehicle(String vehicleIdNumber, String make, String model, int year, String exteriorColor, String interiorColor, int mileage, String condition, int titleIndex, 
 			int dtIndex, int transmissionIndex, int fuelIndex, double price) {
-		this.vehicleIdNumber = vehicleIdNumber;
-		this.make = make;
-		this.model = model;
+		this.vehicleIdNumber = vehicleIdNumber.toUpperCase();
+		this.make = make.toUpperCase();
+		this.model = model.toUpperCase();
 		this.year = year;
-		this.exteriorColor = exteriorColor;
-		this.interiorColor = interiorColor;
+		this.exteriorColor = exteriorColor.toUpperCase();
+		this.interiorColor = interiorColor.toUpperCase();
 		this.mileage = mileage;
-		this.condition = condition;
+		this.condition = condition.toUpperCase();
 		this.titleStatus = TITLESTATUS[titleIndex];
 		this.driveTrainType = DRIVETRAIN[dtIndex];
 		this.transmissionType = TRANSMISSION[transmissionIndex];
 		this.fuelType = FUELTYPE[fuelIndex];
-		this.price = price;
+		this.price = priceFormat(this.price);
 	}
 	
 	public Vehicle(String vehicleIdNumber, String make, String model, int year, String exteriorColor, String interiorColor, int mileage, String condition, String titleStatus, 
 			String driveTrainType, String transmissionType, String fuelType, double price) {
-		this.vehicleIdNumber = vehicleIdNumber;
-		this.make = make;
-		this.model = model;
+		this.vehicleIdNumber = vehicleIdNumber.toUpperCase();
+		this.make = make.toUpperCase();
+		this.model = model.toUpperCase();
 		this.year = year;
-		this.exteriorColor = exteriorColor;
-		this.interiorColor = interiorColor;
+		this.exteriorColor = exteriorColor.toUpperCase();
+		this.interiorColor = interiorColor.toUpperCase();
 		this.mileage = mileage;
-		this.condition = condition;
-		this.titleStatus = titleStatus;
-		this.driveTrainType = driveTrainType;
-		this.transmissionType = transmissionType;
-		this.fuelType = fuelType;
-		this.price = price;
+		this.condition = condition.toUpperCase();
+		this.titleStatus = titleStatus.toUpperCase();
+		this.driveTrainType = driveTrainType.toUpperCase();
+		this.transmissionType = transmissionType.toUpperCase();
+		this.fuelType = fuelType.toUpperCase();
+		this.price = priceFormat(this.price);
 	}
 	
 
@@ -109,7 +112,7 @@ public class Vehicle{
 		public CarBuilder usageHist(int mileage, int titleIndex, String condition){
 			this.mileage = mileage;
 			this.titleStatus = TITLESTATUS[titleIndex];
-			this.condition = condition;
+			this.condition = condition.toUpperCase();
 			return this;
 		}
 
@@ -121,7 +124,7 @@ public class Vehicle{
 		}
 
 		public CarBuilder cost(double price){
-			this.price = price;
+			this.price = priceFormat(price);
 			return this;
 		}
 
@@ -138,7 +141,7 @@ public class Vehicle{
 			car.driveTrainType = this.driveTrainType;
 			car.transmissionType = this.transmissionType;
 			car.fuelType = this.fuelType;
-			car.price = this.price;
+			car.price = priceFormat(this.price);
 			car.titleStatus = this.titleStatus;
 			
 			return car;
@@ -205,31 +208,31 @@ public class Vehicle{
 	}
 	
 	public void setMake(String make) {
-		this.make = make;
+		this.make = make.toUpperCase();
 	}
 	
 	public void setModel(String model) {
-		this.model = model;
+		this.model = model.toUpperCase();
 	}
 	
 	public void setvehicleIdNumber(String vehicleIdNumber) {
-		this.vehicleIdNumber = vehicleIdNumber;
+		this.vehicleIdNumber = vehicleIdNumber.toUpperCase();
 	}
 	
 	public void setExteriorColor(String color) {
-		this.exteriorColor = color;
+		this.exteriorColor = color.toUpperCase();
 	}
 	
 	public void setInteriorColor(String color) {
-		this.interiorColor = color;
+		this.interiorColor = color.toUpperCase();
 	}
 	
-	public void setMileage(int mile) {
-		this.mileage = mile;
+	public void setMileage(int miles) {
+		this.mileage = miles;
 	}
 	
 	public void setCondition(String cond) {
-		this.condition = cond;
+		this.condition = cond.toUpperCase();
 	}
 	
 	public void setDriveTrain(int index) {
@@ -241,7 +244,7 @@ public class Vehicle{
 	}
 	
 	public void setDriveTrain(String dtType) {
-		this.driveTrainType = dtType;
+		this.driveTrainType = dtType.toUpperCase();
 	}
 	
 	public void setTranmission(int index) {
@@ -253,7 +256,7 @@ public class Vehicle{
 	}
 	
 	public void setTranmission(String trans) {
-		this.transmissionType = trans;
+		this.transmissionType = trans.toUpperCase();
 	}
 	
 	public void setFuelType(int index) {
@@ -265,7 +268,7 @@ public class Vehicle{
 	}
 	
 	public void setFuelType(String fuel) {
-		this.fuelType = fuel;
+		this.fuelType = fuel.toUpperCase();
 	}
 	
 	public void setTitleStatus(int index) {
@@ -277,17 +280,19 @@ public class Vehicle{
 	}
 	
 	public void setTitleStatus(String title) {
-		this.titleStatus = title;
+		this.titleStatus = title.toUpperCase();
 	}
 	
 	public void setPrice(double price) {
-		this.price = price;
+		this.price = priceFormat(price);
 	}
 	
-	//---------------------------------------------------------------------------------------------------------
-//	public double priceFormat(Double price) {
-//		
-//	}
+	//--------------------------------------------------------------------------- Helper methods:
+	
+	public static double priceFormat(Double price) {
+	    BigDecimal bdPrice = BigDecimal.valueOf(price);
+	    return bdPrice.setScale(2, RoundingMode.HALF_UP).doubleValue();
+	}
 	
 }
 	

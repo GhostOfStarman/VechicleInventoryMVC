@@ -100,12 +100,11 @@ public class UserDao {
 		return users;
 	}
 	
-	public User getUserByID(User user) throws SQLException {
+	public User getUserById(User user) throws SQLException {
 		establishConnection();
 		
-		String query = "SELECT * FROM InvUserbase.UserAccounts WHERE ID = ?";
+		String query = "SELECT * FROM InvUserbase.UserAccounts WHERE idNo = '" + user.getId() + "'";
 		PreparedStatement statement = dbConnection.prepareStatement(query);
-		statement.setInt(1, user.getId());
 		ResultSet results = statement.executeQuery(query);
 		
 		User singleUser = null;
@@ -128,13 +127,58 @@ public class UserDao {
 		return singleUser;
 	}
 	
+	public User getUserById(int userId) throws SQLException {
+		establishConnection();
+		
+		String query = "SELECT * FROM InvUserbase.UserAccounts WHERE idNo = " + userId;
+		Statement statement = dbConnection.createStatement();
+		ResultSet results = statement.executeQuery(query);
+		
+		User singleUser = null;
+		if(results.next()) {
+			int idNo = results.getInt("idNo");
+			String usernm = results.getString("username");
+			String pw = results.getString("password");;
+			String first = results.getString("firstName"); ;
+			String last = results.getString("lastName");
+			String email = results.getString("emailAddress");;
+			int phoneNo = results.getInt("phoneNumber");;
+			String mailAddress = results.getString("mailingAddress");
+			
+			singleUser = new User(idNo, usernm, pw, first, last, email, phoneNo, mailAddress);
+		}
+		
+		statement.close();
+		closeConnection();
+		
+		return singleUser;
+	}
+	
+	public List<String> listAllUserIds() throws SQLException {
+		establishConnection();
+		List<String> userIds = new ArrayList<>();
+		
+		String query = "SELECT idNo FROM InvUserbase.UserAccounts";
+		Statement statement = dbConnection.createStatement();
+		ResultSet results = statement.executeQuery(query);
+
+		while(results.next()) {
+			userIds.add(results.getString("idNo"));
+		}
+		
+		statement.close();
+		closeConnection();
+		
+		return userIds;
+	}
+	
 //---------------------------------------------------------------------------------------- Update:
 	
 	public boolean updateUser(User user) throws SQLException {
 		establishConnection();
 		
-		String query = "UPDATE InvUserbase.UserAccounts SET(idNo = ?, username = ?, password = ?, firstName = ?, lastName = ?,"
-				+ " emailAddress = ?, mailingAddress = ?, phoneNumber = ?) WHERE ID = ?";
+		String query = "UPDATE InvUserbase.UserAccounts SET idNo = ?, username = ?, password = ?, firstName = ?, lastName = ?, "
+				+ "emailAddress = ?, mailingAddress = ?, phoneNumber = ? WHERE idNo = " + user.getId();
 		
 		PreparedStatement statement = dbConnection.prepareStatement(query);
 		statement.setInt(1, user.getId());
@@ -155,10 +199,10 @@ public class UserDao {
 	
 //---------------------------------------------------------------------------------------- Delete:
 	
-	public boolean deleteUser(User user) throws SQLException {
+	public boolean deleteUser(int id) throws SQLException {
 		establishConnection();
 		
-		String query = "DELETE FROM InvUserbase.UserAccounts WHERE ID = " + user.getId();
+		String query = "DELETE FROM InvUserbase.UserAccounts WHERE idNo = '" + id + "'";
 		Statement statement = dbConnection.createStatement();
 		
 		int rowsAffected = statement.executeUpdate(query);
@@ -166,6 +210,42 @@ public class UserDao {
 		closeConnection();
 		
 		return rowsAffected > 0;
+	}
+	
+	public boolean deleteUser(User user) throws SQLException {
+		establishConnection();
+		
+		String query = "DELETE FROM InvUserbase.UserAccounts WHERE idNo = '" + user.getId() + "'";
+		Statement statement = dbConnection.createStatement();
+		
+		int rowsAffected = statement.executeUpdate(query);
+		statement.close();
+		closeConnection();
+		
+		return rowsAffected > 0;
+	}
+	
+	public boolean clearTable() throws SQLException {
+		establishConnection();
+		
+		Statement statement = dbConnection.createStatement();
+		List<String> allUserIds = this.listAllUserIds();
+		for(String id : allUserIds) {
+			String query = "DELETE FROM InvUserbase.UserAccounts WHERE idNo = '" + id + "'";
+			statement.execute(query); 
+		}
+		
+		ResultSet results = statement.executeQuery("SELECT * FROM InvUserbase.UserAccounts");
+		
+		int numRows = 0;
+		while(results.next()) {
+			numRows++;
+		}
+		
+		statement.close();
+		closeConnection();
+		
+		return numRows < 1;
 	}
 
 }

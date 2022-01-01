@@ -38,13 +38,13 @@ public class VehicleDao {
 		  }
 	  }
 	  
-//—————————————————————————————————————————	create methods: 
+//—————————————————————————————————————————	Create methods: 
 	  
 	  public boolean insertVehicle(Vehicle car) throws SQLException {
 			establishConnection();
 			
-			String query = "INSERT INTO Vehicles.Cars (vin, make, model, year, extColor, intColor, mileage,"
-					+ "condition, title, driveTrain, transmission, fuel, price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String query = "INSERT INTO Vehicles.Cars (vin, make, model, modelYear, extColor, intColor, mileage, "
+					+ "currCondition, title, driveTrain, transmission, fuel, price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			
 			PreparedStatement statement = dbConnection.prepareStatement(query);
 			statement.setString(1, car.getVehicleIdNumber());
@@ -67,10 +67,24 @@ public class VehicleDao {
 			
 			return rowsAffected > 0;
 	  }
+	  
+		public int getNumVehicles() throws SQLException {
+			establishConnection();
+			Statement statement = dbConnection.createStatement();
+			ResultSet results = statement.executeQuery("SELECT * FROM Vehicles.Cars");
+			
+			int count = 0;
+			while(results.next()) {
+				count++;
+			}
+			statement.close();
+			closeConnection();
+			return count;
+		}
 
 //—————————————————————————————————————————	Read methods:  
 	  
-	  public List<Vehicle> listAllVehicles(Vehicle vehicle) throws SQLException {
+	  public List<Vehicle> listAllVehicles() throws SQLException {
 			List<Vehicle> inventory = new ArrayList<>();
 
 			establishConnection();
@@ -83,11 +97,11 @@ public class VehicleDao {
 				String vin = results.getString("vin");
 				String make = results.getString("make");
 				String model = results.getString("model");
-				int year = results.getInt("year"); 
+				int year = results.getInt("modelYear"); 
 				String intColor = results.getString("intColor");
 				String extColor = results.getString("extColor");
 				int mileage = results.getInt("mileage");
-				String condition = results.getString("condition");
+				String condition = results.getString("currCondition");
 				String title = results.getString("title");
 				String driveTrain = results.getString("driveTrain");
 				String transmission = results.getString("transmission");
@@ -104,12 +118,11 @@ public class VehicleDao {
 			return inventory;
 		}
 	  
-	  public Vehicle getByVIN(Vehicle vehicle) throws SQLException{
+	  public Vehicle getByVIN(String vinNo) throws SQLException{
 		  	establishConnection();
 			
-			String query = "SELECT * FROM Vehicles.Cars WHERE ID = ?";
-			PreparedStatement statement = dbConnection.prepareStatement(query);
-			statement.setString(1, vehicle.getVehicleIdNumber());
+			String query = "SELECT * FROM Vehicles.Cars WHERE vin ='" + vinNo+"'";
+			Statement statement = dbConnection.createStatement();
 			ResultSet results = statement.executeQuery(query);
 			
 			Vehicle car = null;
@@ -117,11 +130,11 @@ public class VehicleDao {
 				String vin = results.getString("vin");
 				String make = results.getString("make");
 				String model = results.getString("model");
-				int year = results.getInt("year"); 
+				int year = results.getInt("modelYear"); 
 				String intColor = results.getString("intColor");
 				String extColor = results.getString("extColor");
 				int mileage = results.getInt("mileage");
-				String condition = results.getString("condition");
+				String condition = results.getString("currCondition");
 				String title = results.getString("title");
 				String driveTrain = results.getString("driveTrain");
 				String transmission = results.getString("transmission");
@@ -136,14 +149,32 @@ public class VehicleDao {
 			
 			return car;
 		}
+	  
+	  public List<String> listAllVins() throws SQLException {
+			establishConnection();
+			List<String> acctIds = new ArrayList<>();
+			
+			String query = "SELECT vin FROM Vehicles.Cars";
+			Statement statement = dbConnection.createStatement();
+			ResultSet results = statement.executeQuery(query);
+
+			while(results.next()) {
+				acctIds.add(results.getString("vin"));
+			}
+			
+			statement.close();
+			closeConnection();
+			
+			return acctIds;
+		}
 	
 //————————————————————————————————————————— update methods:
 	
 	public boolean updateVehicle(Vehicle vehicle) throws SQLException{
 		establishConnection();
 		
-		String query = "UPDATE InvUserbase.UserAccounts SET(vin = ?, make = ?, model = ?, year = ?, extColor = ?,"
-				+ " intColor = ?, mileage = ?, condition = ?, title = ?, driveTrain = ?, transmission = ?, fuel = ?, price = ?) WHERE vin = ?";
+		String query = "UPDATE Vehicles.Cars SET vin = ?, make = ?, model = ?, modelYear = ?, extColor = ?,"
+				+ " intColor = ?, mileage = ?, currCondition = ?, title = ?, driveTrain = ?, transmission = ?, fuel = ?, price = ? WHERE vin = '" + vehicle.getVehicleIdNumber() + "'";
 		PreparedStatement statement = dbConnection.prepareStatement(query);
 		
 		statement.setString(1, vehicle.getVehicleIdNumber());
@@ -170,17 +201,51 @@ public class VehicleDao {
 	
 //————————————————————————————————————————— delete methods:
 	
-	public boolean deleteUser(Vehicle vehicle) throws SQLException {
+	public boolean deleteVehicle(String vinNo) throws SQLException {
 		establishConnection();
 		
-		String query = "DELETE FROM Vehicles.Cars WHERE vin = " + vehicle.getVehicleIdNumber();
+		String query = "DELETE FROM Vehicles.Cars WHERE vin = '" + vinNo + "'";
 		Statement statement = dbConnection.createStatement();
-		
 		int rowsAffected = statement.executeUpdate(query);
+		
+		statement.close();
+		closeConnection();
+		return rowsAffected > 0;
+	}
+	
+	public boolean deleteVehicle(Vehicle vehicle) throws SQLException {
+		establishConnection();
+		
+		String query = "DELETE FROM Vehicles.Cars WHERE vin = '" + vehicle.getVehicleIdNumber() + "'";
+		Statement statement = dbConnection.createStatement();
+		int rowsAffected = statement.executeUpdate(query);
+		
+		statement.close();
+		closeConnection();
+		return rowsAffected > 0;
+	}
+	
+	public boolean clearTable() throws SQLException {
+		establishConnection();
+		
+		Statement statement = dbConnection.createStatement();
+		List<String> allVins = this.listAllVins();
+		for(String vin : allVins) {
+			String query = "DELETE FROM Vehicles.Cars WHERE vin = '" + vin + "'";
+			statement.execute(query); //use executeQuery() with ResultSet
+		}
+		
+		ResultSet results = statement.executeQuery("SELECT * FROM Vehicles.Cars");
+		
+		int numRows = 0;
+		while(results.next()) {
+			numRows++;
+		}
+		
 		statement.close();
 		closeConnection();
 		
-		return rowsAffected > 0;
+		return numRows < 1;
 	}
 	
 }
