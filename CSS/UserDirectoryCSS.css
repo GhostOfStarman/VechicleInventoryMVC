@@ -1,0 +1,109 @@
+@charset "UTF-8";
+
+body{
+	background-color : cyan;
+}
+
+h1{
+	text-align : center;
+	font-family: Helvetica, sans-serif;
+	color : blue
+}
+
+th, td{
+	font-family: Helvetica, sans-serif;
+}
+
+#insertUser{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#listUsers{
+	margin:auto;
+	margin-bottom: 10px;
+}
+
+#insertUserLink {
+	color : white;
+	background-color: #89cff0;
+	font-size: medium;
+	text-decoration: none;
+	font-size : 70%;
+  	padding: 7px 10px 7px 10px;
+  	text-align: center;
+  	display: inline;
+  	letter-spacing: 1px;
+  	border-radius: 15px;
+  	margin: auto;
+  	display: block;
+  	width: 7%;
+}
+
+#listUsersLink {
+	color : white;
+	background-color: #89cff0;
+	font-size: medium;
+	text-decoration: none;
+	font-size : 70%;
+  	padding: 7px 10px 7px 10px;
+  	text-align: center;
+  	display: inline;
+  	letter-spacing: 1px;
+  	border-radius: 15px;
+  	margin: auto;
+  	display: block;
+  	width: 8%;
+}
+
+
+#insertUserLink:hover{
+	color: blue;
+}
+
+td {
+	padding: 7px;
+}
+
+tr:hover {
+	background-color: yellow;
+}
+
+table {
+	border-collapse: collapse;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	text-align: center;
+	background-color: rgba(255, 255, 255, 1);
+}
+
+.searchBar input[type=text] {
+  padding: 6px;
+  border: none;
+  margin: auto;
+  font-size: 20px;
+  display: block;
+  width: 10%;
+}
+
+#listUsersLink:hover, #mainMenuLink:hover{
+	color: blue;
+}
+
+#mainMenuLink{
+	color : white;
+	background-color: #89cff0;
+	font-size: medium;
+	text-decoration: none;
+	font-size : 70%;
+  	padding: 7px 10px 7px 10px;
+  	text-align: center;
+  	display: inline;
+  	letter-spacing: 1px;
+  	border-radius: 15px;
+  	margin: auto;
+  	display: block;
+  	width: 10%;
+}
