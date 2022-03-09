@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+h1 {
+	text-align : center;
+	font-family: Helvetica, sans-serif;
+	color : blue
+}
+
+body {
+	padding:0px; 
+	font-family: Helvetica, sans-serif;
+	background: linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #5EDFFF calc(60% + 1px), #5EDFFF 72%, #3E64FF calc(72% + 1px), #3E64FF 100%);
+  	background-size: cover;
+}
+
+#carInv {
+	margin: auto;
+	position: relative;
+} 
+
+
+a.inventory, a.update{
+	color : white;
+	background-color: blue;
+	font-size: medium;
+	text-decoration: none;
+	font-size : 70%;
+  	padding: 7px 10px 7px 10px;
+  	text-align: center;
+  	display: inline;
+  	letter-spacing: 1px;
+  	border-radius: 15px;
+  	margin: auto;
+  	display: block;
+  	width: 5%;
+}
