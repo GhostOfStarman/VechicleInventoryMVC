@@ -8,40 +8,39 @@ Abstract: To create a program that manages vehicle inventory information for a c
 
 //**************************************************
 Tools/Technologies:
-Eclipse IDE + JDBC JSP, Servlets
-MySQL + MySQLWorkbench
-Apache Tomcat
-HTML/CSS
+IDE: Eclipse 
+Build tools: Maven
+Frameworks: Spring Core, Hibernate
+Database: MySQL + MySQLWorkbench, JDBC
+Server: Apache Tomcat 
+View layer: HTML/CSS + JSP
 
 //**************************************************
-
 Phase 1: Creating a vehicle object.
 
 The fields of the object contain data that is relevant to the consumer. Said fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational builder design pattern would help simply and organize the instantiation of the vehicle object.
 
-Vehicle fields
-Year (int)
-Mileage (int)
+Vehicle fields:
 
-VehicleIdNumber(String)
-Make (String)
-Model(String)
-Condition(String)
+year (int)
+mileage (int)
+
+vehicleIdNumber(String)
+make (String)
+model(String)
+condition(String)
 interiorColor(String)
 exteriorColor(String)
+titleStatus (String)
+drivetrainType (String)
+transmissionType (String)
+fuelType (String)
 
-Price (double)
-
-Title (titleStatus)
-driveTrain (driveTrain)
-TransmissionType (dransmission)
-FuelType (dower)
+price (double)
 *****************************************
 
-Here I learned more about implementing Enumerated types and because I found out that I will need to convert the data into strings to be stored in the database, I went on about finding out how to do so via the “toString() method”. This became the second static class within the Vehicle class. 
-
 12/30/21 update: 
-A user class is created. I also moved away from using enums for the title, drivetrain, transmission, and fuel fields. I instead set each category as a static array variable.
+A user class is created. This may be refactored to 'Customer' later. This entity is used to keep track of customers who have purchased/financed a vehicle.
 
 User Fields
 idNo (int)
@@ -66,11 +65,8 @@ At the moment of writing this, I have thought about splitting the table I’ve c
 12/30/21 update: 
 DAO’s are written for each the user and the vehicle object with CRUD operations. 
 
-
 //—————————————————————————————————————————
 Phase 3: connect logic to front end.
-
-The end goal is to either write a simple client file using CLI to retrieve and display data for the user or, better yet, to design a GUI through a framework such as JavaFX and port the project to a desktop application i.e. .exe file, etc.
 
 One idea is to separate the methods by search and update/edit.
 
@@ -111,4 +107,7 @@ I have established that there will be a separate client file that will call the 
 This project has been revamped once again to include user accounts that can be associated with vehicles in the lot. Using JSP and the MVC model, html/css can be used to display data in a web browser so I have writing object models for both the vehicles and the users, which I have created database access layers for each. Another table in the database was created for the users. Launching the now web app on the Tomcat Server lists all user and vehicle details from the database. Its important to note that each time the database reads a user/vehicle, an object is usually returned. Each DAO has CRUD functionality. I am looking to add options and create JSP forms that will enable the client to edit details about the users/vehicles. After this, the controller component is the in line to be created.
 
 The next major goal is to create another table that lists any offers or currently financed vehicle. Also another table for cars that have been sold.
+
+3/8/22:
+After spending time learning Spring and how to better use Maven, I am able to turn this into a dynamic web MVC application with annotation based configuration. I have started to overhaul a lot of the code in the entity and DAO layers. I have implemented the basic CRUD functions and I am working on connecting the User Account and Finance Record entities to the Vehicle object. More to come...
 
