@@ -1,24 +1,25 @@
 # VechicleInventoryMVC
 
-Vehicle Inventory Project Blueprint
+Vehicle Inventory Management System Project - Andy Szeto
 
-/**************************************************
-Abstract: To create a program that manages vehicle inventory information for a car dealership. This project teaches me to manipulate information in a database with a backend language such as java and ultimately display information retrieved by queries formally, through a GUI. This helps me understand the fundamental interactions within the user-client-server model of information sharing.
-**************************************************/
+// —————————————————————————————————————————————————————————————————————————————————— >
+Background: After graduating college, I started to relearn Python and Java. This project started as a Python app that ran through the IDE console and stored data in an excel spreadsheet. My desire to learn backend development and proficiency in Java led me to changing the language this app was written in. After learning about the MVC design pattern, I was able to produce the model and view components in Java, but my grasp on Controllers (HttpSerlvet specicially) wasn't so great, so I decided to learn Spring in order to make my application more robust and modular. This is by far the largest software project I've worked on as a programmer, but I hope to grow and eventually use this knowledge in the industry.
 
-//**************************************************
+Abstract: To create a program that manages vehicle inventory data for a car dealership. This project teaches me about Java development at the enterprise level by implementing technologies offered by Spring. I am focusing on the Model-View-Controller design pattern with interactions between three main entities (Vehicle, CustomerAccount, FinanceRecords). 
+
+// —————————————————————————————————————————————————————————————————————————————————— >
 Tools/Technologies:
 IDE: Eclipse 
 Build tools: Maven
 Frameworks: Spring Core, Hibernate
 Database: MySQL + MySQLWorkbench, JDBC
 Server: Apache Tomcat 
-View layer: HTML/CSS + JSP
+View layer: HTML/CSS + JSP, JSTL
 
-//**************************************************
+// —————————————————————————————————————————————————————————————————————————————————— >
 Phase 1: Creating a vehicle object.
 
-The fields of the object contain data that is relevant to the consumer. Said fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational builder design pattern would help simply and organize the instantiation of the vehicle object.
+The fields of the object contain data that is relevant to the consumer. These fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational builder design pattern would help simply and organize the instantiation of the vehicle object. 3/8/22 update: I've found that because Spring's dependency injection offers inversion of control, the components of the builder pattern within the Vehicle class may be unecessary. 
 
 Vehicle fields:
 
@@ -37,23 +38,25 @@ transmissionType (String)
 fuelType (String)
 
 price (double)
-*****************************************
+// —————————————————————————————————————————————————————————————————————————————————— >
 
 12/30/21 update: 
 A user class is created. This may be refactored to 'Customer' later. This entity is used to keep track of customers who have purchased/financed a vehicle.
+3/8/22 update: This has been refactored to 'CustomerAccounts'.
 
-User Fields
-idNo (int)
+CustomerAccount Fields
+
+customerId (int)
 Username (String)
 Password (String)
 FirstName (String)
 LastName (String)
-Email (String)
-MailingAddress (String)
-PhoneNumber (int)
+emailAddress (String)
+mailingAddress (String)
+phoneNumber (int)
 
 
-//—————————————————————————————————————————
+// —————————————————————————————————————————————————————————————————————————————————— >
 Phase 2: 
 
 Using jdbc as the driver connector for mySQL, it becomes possible to permanentize and update the states of the vehicle object. 
