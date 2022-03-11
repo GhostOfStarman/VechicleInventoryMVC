@@ -113,3 +113,5 @@ The next major goal is to create another table that lists any offers or currentl
 3/8/22:
 After spending time learning Spring and how to better use Maven, I am able to turn this into a dynamic web MVC application with annotation based configuration. I have started to overhaul a lot of the code in the entity and DAO layers. I have implemented the basic CRUD functions and I am working on connecting the User Account and Finance Record entities to the Vehicle object. More to come...
 
+3/9/22:
+I have refactored much of the FinanceRecord class so that the loan calculations and fields work the way I desired. For simplicity's sake, the customer will be limited to making monthly payments of exact amounts, this is calculated by the amortization formula A = principal * ((apr * ((1 + apr) ^ termLength)/(((1 + apr) ^ termLength) - 1))). 
