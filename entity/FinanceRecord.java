@@ -123,12 +123,16 @@ public class FinanceRecord{
 		this.vehiclePrice = priceFormat(vehiclePrice);
 		this.downPayment = priceFormat(downPayment);
 		
+		// loan amount is the amount the customer has to borrow
 		double loanAmount = vehiclePrice - downPayment;
 		double monthlyPayment = calcMonthlyPayments(loanAmount, annualRate, termLength);
-		
 		this.monthlyPaymentAmount = monthlyPayment;
-		this.balance = termLength * monthlyPaymentAmount;
-		this.paidOff = this.installmentsPaid == termLength;
+		
+		// this is calculating and setting the total amount the customer will pay with interest
+		double outstandingBalance = termLength * monthlyPayment;
+		this.balance = outstandingBalance - (installmentsPaid * monthlyPaymentAmount);
+		
+		this.paidOff = this.balance == 0;
 	}
 
 	// ------------------------------------------------- 
