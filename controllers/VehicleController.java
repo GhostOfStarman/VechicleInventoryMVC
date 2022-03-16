@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.vehicleinventory.entity.CustomerAccount;
 import com.vehicleinventory.entity.Vehicle;
 import com.vehicleinventory.service.VehicleService;
 
@@ -44,7 +45,7 @@ public class VehicleController {
 	}
 	
 	
-	// ----------------------------- Form data submission -------------------------------------------------- >
+	// --------- Form data submission ----------------------- >
 	// submitting form information for adding vehicle
 	@PostMapping("/addVehicleSave")
 	public String addVehicleSave(@Valid @ModelAttribute("Vehicle") Vehicle car, BindingResult bindingResult) {
@@ -66,7 +67,7 @@ public class VehicleController {
 		return "redirect:/inventory/listAll";
 	}
 	
-	// ----------------------------- Links in main table -------------------------------------------------- >
+	// ------------Links in main table ------------------------ >
 	// mapping the view full details link in table
 		@GetMapping("/showFullDetails")
 		public String showVehicleDetails(@RequestParam("vehicleIdNumber") String vin, Model model) {
@@ -90,6 +91,27 @@ public class VehicleController {
 		return "redirect:/inventory/listAll";
 	}
 
+	// ----------------------------- Customer Accounts -------------------------------------------------- >
+	@GetMapping("/listAccounts")
+	public String listCustomerAccounts(Model model) {
+		List<CustomerAccount> users = vehicleService.getCustomerAccounts();
+		model.addAttribute("Customers", users);
+		
+		return "all-customers";
+	}
+	
+	@GetMapping("/showCustomerUpdateForm")
+	public String showFormForUpdate(@RequestParam("customerId") int id, Model model) {
+		CustomerAccount account = vehicleService.getCustomerAccount(id);
+		model.addAttribute("CustomerAccount", account);
+		return "customer-update-form";
+	}
+	
+	@GetMapping("/deleteAccount")
+	public String deleteVehicle(@RequestParam("customerId") int id, Model model) {
+		// vehicleService.deleteCustomerAccount(id);
+		return "redirect:/inventory/listAccounts";
+	}
 }
 
 
