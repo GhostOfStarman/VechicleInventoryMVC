@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.vehicleinventory.entity.CustomerAccount;
-
+import com.vehicleinventory.entity.FinanceRecord;
 
 @Repository
 public class CustomerAccountDAOImp implements CustomerAccountDAO{
@@ -20,10 +20,19 @@ public class CustomerAccountDAOImp implements CustomerAccountDAO{
 	@Override
 	public List<CustomerAccount> getCustomerAccounts() {
 		Session currentSession = sessionFactory.getCurrentSession();
-		Query<CustomerAccount> theQuery = currentSession.createQuery("from CustomerAccount order by lastName", CustomerAccount.class);
+		Query<CustomerAccount> theQuery = currentSession.createQuery("from customerAccounts order by lastName", CustomerAccount.class);
 		List<CustomerAccount> CustomerAccounts = theQuery.getResultList();
 				
 		return CustomerAccounts;
+	}
+	
+	@Override
+	public List<FinanceRecord> getFinancedVehicles(int id){
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<FinanceRecord> theQuery = currentSession.createQuery("from financeRecords where customerId=:id", FinanceRecord.class);
+		List<FinanceRecord> financedVehicles = theQuery.getResultList();
+		
+		return financedVehicles;
 	}
 	
 	@Override
@@ -45,7 +54,7 @@ public class CustomerAccountDAOImp implements CustomerAccountDAO{
 	@Override
 	public void deleteCustomerAccount(int custId) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		Query carQuery = currentSession.createQuery("delete from CustomerAccounts where id=:custId");
+		Query carQuery = currentSession.createQuery("delete from customerAccounts where id=:custId");
 		carQuery.setParameter("custId", custId);
 		carQuery.executeUpdate();		
 	}
