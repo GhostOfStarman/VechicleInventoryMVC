@@ -3,11 +3,13 @@ package com.vehicleinventory.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import java.util.*;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -76,12 +78,18 @@ public class Vehicle{
 	@Column(name="fuel")
 	private String fuelType;
 
-	
 	@NotNull(message="cannot be blank")
 	@Min(value=0, message="must be at least $0.00")
 	@Max(value=10000000, message="must be less than $10,000,000")
 	@Column(name="price")
 	private double price;
+	
+	// ----------------------------------------------------------------------------------- >
+	
+	// links the PK from FinanceRecord (financeId) table to the FK column in the Cars table (financeId)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="financeId")
+    private FinanceRecord financeRecord;
 	
 	// ---------------------------------------------------------------------------------------------------------
 	

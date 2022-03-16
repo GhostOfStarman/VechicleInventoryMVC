@@ -1,10 +1,14 @@
 package com.vehicleinventory.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -12,7 +16,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
+// entity name maps to CustomerAccountDAOImp methods
+@Entity(name="customerAccounts")
 @Table(name="CustomerAccounts")
 public class CustomerAccount {
 	
@@ -55,6 +60,10 @@ public class CustomerAccount {
 	@Size(min=1, max=50, message="must be between 1-50 Characters")
 	@Column(name="mailingAddress")
 	private String mailingAddress;
+	
+	// ----------------------------------------------------------------------------------- >
+	@OneToMany(mappedBy="financeId", cascade= {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+	private List<FinanceRecord> financedVehicles;
 
 	// ----------------------------------------------------------------------------------- >
 	// Constructors
@@ -88,9 +97,17 @@ public class CustomerAccount {
 
 	// ----------------------------------------------------------------------------------- >
 	// Getters/Setters
-	
-	public int getcustomerId() {
-		return customerId;
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public List<FinanceRecord> getFinancedVehicles() {
+		return financedVehicles;
+	}
+
+	public void setFinancedVehicles(List<FinanceRecord> financedVehicles) {
+		this.financedVehicles = financedVehicles;
 	}
 
 	public void setcustomerId(int customerId) {

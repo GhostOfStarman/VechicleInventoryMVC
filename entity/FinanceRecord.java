@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -15,7 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
+@Entity(name="financeRecords")
 @Table(name="FinanceRecords")
 public class FinanceRecord{
 	
@@ -24,27 +25,31 @@ public class FinanceRecord{
 	@Column(name="financeId")
 	private int financeId;
 	
-	@NotNull(message="cannot be blank")
-	@Min(value=1, message="cannot be blank")
-	@Column(name="customerId")
-	private int customerId;
+//	@NotNull(message="cannot be blank")
+//	@Min(value=1, message="cannot be blank")
+//	@Column(name="customerId")
+//	private int customerId;
 	
 	@NotNull(message="cannot be blank")
-	@Size(min=1, max=15, message="must be between 1-15 Characters")
+	@Min(value=300, message="must be more than 299")
+	@Max(value=850, message="must be less than 851")
 	@Column(name="creditScore")
 	private int creditScore;
 	
 	@NotNull(message="cannot be blank")
-	@Size(min=1, max=15, message="must be between 1-15 Characters")
+	@Size(min=17, max=17, message="must be 17 Characters")
 	@Column(name="vin")
 	private String vehicleIdNumber;
 	
 	@NotNull(message="cannot be blank")
 	@Column(name="VehiclePrice")
+	@Min(value=0, message="must be at least $0.00")
+	@Max(value=10000000, message="must be less than $10,000,000")
 	private double vehiclePrice;
 	
 	@NotNull(message="cannot be blank")
 	@Column(name="termLength")
+	@Max(value=84, message="must be less than 85 months")
 	private int termLength;
 	
 	@NotNull(message="cannot be blank")
@@ -57,15 +62,16 @@ public class FinanceRecord{
 	
 	@NotNull(message="cannot be blank")
 	@Column(name="downPayment")
-	// @Max(value=(long) this.vehiclePrice)
 	private double downPayment;
 	
 	@NotNull(message="cannot be blank")
 	@Column(name="balance")
+	@Min(value=0, message="must be at least $0.00")
 	private double balance;
 	
 	@NotNull(message="cannot be blank")
 	@Column(name="monthlyPmt")
+	@Min(value=0, message="must be at least $0.00")
 	private double monthlyPaymentAmount;
 	
 	@NotNull(message="cannot be blank")
@@ -75,14 +81,14 @@ public class FinanceRecord{
 	@Column(name="paidOff")
 	private boolean paidOff;
 	
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "financeId")
-//	private Vehicle vehicle;
-
-	// these interest rates are ANNUAL, converted to monthly in calcMonthlyPayments()
-	public static final double[] preownedInterestRates = {20.5, 17.75, 11.25, 6.0, 4.5};
-	public static final double[] pristineInterestRates = {14.5, 12.0, 7.5, 4.7, 3.7};
-	public static final int[] termLengthOptions = {12, 24, 36, 48, 60, 72, 84};
+	// Hibernate mappings --------------------------------------------- >
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "financeId")
+	private Vehicle vehicle;
+	
+  	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customerId")
+    private CustomerAccount CustomerAccount;
 
 	// ----------------------------------------------------------------------------------- >
 	// Constructors
@@ -95,16 +101,16 @@ public class FinanceRecord{
 
 	public FinanceRecord(int financeId, int customerId, String vehicleIdNumber){
 		this.financeId = financeId;
-		this.customerId = customerId;
+		//this.customerId = customerId;
 		this.vehicleIdNumber = vehicleIdNumber;
 	}
 
 	
-	public FinanceRecord(int financeId, int customerId, int creditScore, String vehicleIdNumber, int termLength, double apr, double vehiclePrice, 
+	public FinanceRecord(int financeId, int creditScore, String vehicleIdNumber, int termLength, double apr, double vehiclePrice, 
 			String currCondition, double downPayment, int installmentsPaid){
 		
 		this.financeId = financeId;
-		this.customerId = customerId;
+		//this.customerId = customerId;
 		this.creditScore = creditScore;
 		this.vehicleIdNumber = vehicleIdNumber.toUpperCase();
 		
@@ -139,6 +145,8 @@ public class FinanceRecord{
 	// calculation methods:
 
 	public double calcPreownedInterestRate(int score){
+		double[] preownedInterestRates = {20.5, 17.75, 11.25, 6.0, 4.5};
+		
 		if(score <= 579){
 			return preownedInterestRates[0];
 		}else if(score > 579 && score <= 619){
@@ -153,6 +161,8 @@ public class FinanceRecord{
 	}
 
 	public double calcPristineInterestRate(int score){
+		double[] pristineInterestRates = {14.5, 12.0, 7.5, 4.7, 3.7};
+		
 		if(score <= 579){
 			return pristineInterestRates[0];
 		}else if(score > 579 && score <= 619){
@@ -196,14 +206,6 @@ public class FinanceRecord{
 
 	public void setFinanceId(int financeId) {
 		this.financeId = financeId;
-	}
-
-	public int getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
 	}
 
 	public int getCreditScore() {
@@ -294,13 +296,13 @@ public class FinanceRecord{
 		this.paidOff = paidOff;
 	}
 	
-//	public Vehicle getVehicle() {
-//		return vehicle;
-//	}
-//
-//	public void setVehicle(Vehicle vehicle) {
-//		this.vehicle = vehicle;
-//	}
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
 
 
 }
