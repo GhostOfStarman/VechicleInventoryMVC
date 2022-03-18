@@ -17,7 +17,7 @@ Server: Apache Tomcat
 View layer: HTML/CSS + JSP, JSTL
 
 -----------------
-i) Entities/Models:
+- Entities/Models:
 
 The fields of the object contain data that is relevant to the consumer. These fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational builder design pattern would help simply and organize the instantiation of the vehicle object. 3/8/22 update: I've found that because Spring's dependency injection offers inversion of control, the components of the builder pattern within the Vehicle class may be unecessary. 
 
@@ -75,7 +75,7 @@ After learning Hibernate for object relational mapping between Java and mySQL, I
 
 
 -----------------
-Phase 3: connect logic to front end.
+- Frontend/Visuals
 
 One idea is to separate the methods by search and update/edit.
 
@@ -92,15 +92,19 @@ Update function ideas:
 12/30/21 update: 
 Integrating code into the view layer using JSP displays all data from both tables.
 
+3/18/22 update:
+I am still employing the use of JSPs for my view layer with the help of CSS to help my visuals go a bit further. This process included figuring out which view pages were necessary, whether it'd be reading information or form submission, I also had to configure these alongside the code in my Controller class.
 
 -----------------
-Furthering the project (ideas):
+- Furthering the project (ideas):
 
 -Use (scraping) to utilize a function to grab the (first) image of the car when description is entered (i.e. “black 1991 Honda Civic”)
 -Embed to a website
 -Create graphics for application; find out how to incorporate images (with javaFX?)
 
 I’m realizing the redundancy of creating a vehicle object and having a database. Perhaps I can store the vehicle objects in a data structure and use them to somehow make my program more efficient? Maybe having “two copies” of the same data can provide some insurance incase the database server goes down/is offline.
+
+How to deploy application online.
 
 -----------------
 Changelogs
@@ -129,6 +133,7 @@ I've spent a fair amount of time this past week understanding how to further use
 
 Current schema setup:
 3 tables: Cars, CustomerAccounts, FinanceRecords
+Each of these tables are connected to the backend by a DAO layer, and all three of these DAOs pass through a service layer called VehicleSerivce.class
 
 Foreign key setup: financeId in Vehicle is the FK to financeId PK in FinanceRecord, customerId in financeRecord is FK to customerId PK in CustomerAccount.
 
