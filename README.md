@@ -2,12 +2,12 @@
 
 Vehicle Inventory Management System Project - Andy Szeto
 
-// —————————————————————————————————————————————————————————————————————- >
+-----------------
 Background: After graduating college, I started to relearn Python and Java. This project started as a Python app that ran through the IDE console and stored data in an excel spreadsheet. My desire to learn backend development and proficiency in Java led me to changing the language this app was written in. After learning about the MVC design pattern, I was able to produce the model and view components in Java, but my grasp on Controllers (HttpSerlvet specicially) wasn't so great, so I decided to learn Spring in order to make my application more robust and modular. This is by far the largest software project I've worked on as a programmer, but I hope to grow and eventually use this knowledge in the industry.
 
-Abstract: To create a program that manages vehicle inventory data for a car dealership. This project teaches me about Java development at the enterprise level by implementing technologies offered by Spring. I am focusing on the Model-View-Controller design pattern with interactions between three main entities (Vehicle, CustomerAccount, FinanceRecords). 
+Abstract: To create a program that manages vehicle inventory data for a car dealership. This project teaches me about Java development at the enterprise level by implementing technologies offered by the Spring project. I am focusing on the Model-View-Controller design pattern with interactions between three main entities (Vehicle, CustomerAccount, FinanceRecords). As entities are added to this project, especially ones with relationships with existing ones, complexity grows at a nonlinear rate. Due to the benefits of dependency injection and the annotation-based configuration magic offered by Spring, users of this application have free control over data input.
 
-// —————————————————————————————————————————————————————————————————————- >
+-----------------
 Tools/Technologies:
 IDE: Eclipse 
 Build tools: Maven
@@ -16,8 +16,8 @@ Database: MySQL + MySQLWorkbench, JDBC
 Server: Apache Tomcat 
 View layer: HTML/CSS + JSP, JSTL
 
-// —————————————————————————————————————————————————————————————————————- >
-Phase 1: Creating a vehicle object.
+-----------------
+i) Entities/Models:
 
 The fields of the object contain data that is relevant to the consumer. These fields are to be stored in the database. Here, basic principles of OOP such as encapsulation with the get and set methods are employed. Because the object has so many fields, I found that using the creational builder design pattern would help simply and organize the instantiation of the vehicle object. 3/8/22 update: I've found that because Spring's dependency injection offers inversion of control, the components of the builder pattern within the Vehicle class may be unecessary. 
 
@@ -54,8 +54,12 @@ emailAddress (String)
 mailingAddress (String)
 phoneNumber (int)
 
-// —————————————————————————————————————————————————————————————————————- >
-Phase 2: 
+3/18/22 update:
+A FinanceRecord class has been in the works for some time but I needed to figure out how to integrate its functionalities with Vehicle and CustomerAccount classes. One of the more challenging parts was to determine how certain fields of the FinanceRecord object would affect other internal fields simultaneously.  Over time, I figured it'd be best to use an amortization formula for scheduled payments and (at this time) omit the ablity to make early payments for simplicity. 
+
+
+-----------------
+- Databasing:
 
 Using jdbc as the driver connector for mySQL, it becomes possible to permanentize and update the states of the vehicle object. 
 
@@ -66,7 +70,11 @@ At the moment of writing this, I have thought about splitting the table I’ve c
 12/30/21 update: 
 DAO’s are written for each the user and the vehicle object with CRUD operations. 
 
-// —————————————————————————————————————————————————————————————————————- >
+3/18/22 update:
+After learning Hibernate for object relational mapping between Java and mySQL, I've configured my entity classes with annotations that is connected to my database. More on this in the changelog.
+
+
+-----------------
 Phase 3: connect logic to front end.
 
 One idea is to separate the methods by search and update/edit.
@@ -85,7 +93,7 @@ Update function ideas:
 Integrating code into the view layer using JSP displays all data from both tables.
 
 
-// —————————————————————————————————————————————————————————————————————- >
+-----------------
 Furthering the project (ideas):
 
 -Use (scraping) to utilize a function to grab the (first) image of the car when description is entered (i.e. “black 1991 Honda Civic”)
@@ -94,7 +102,7 @@ Furthering the project (ideas):
 
 I’m realizing the redundancy of creating a vehicle object and having a database. Perhaps I can store the vehicle objects in a data structure and use them to somehow make my program more efficient? Maybe having “two copies” of the same data can provide some insurance incase the database server goes down/is offline.
 
-// —————————————————————————————————————————————————————————————————————- >
+-----------------
 Changelogs
 
 11/10/21:
@@ -115,3 +123,17 @@ After spending time learning Spring and how to better use Maven, I am able to tu
 
 3/9/22:
 I have refactored much of the FinanceRecord class so that the loan calculations and fields work the way I desired. For simplicity's sake, the customer will be limited to making monthly payments of exact amounts, this is calculated by the amortization formula A = principal * ((apr * ((1 + apr) ^ termLength)/(((1 + apr) ^ termLength) - 1))). 
+
+3/18/22:
+I've spent a fair amount of time this past week understanding how to further use Hibernate mappings to create relationships between my tables. 
+
+Current schema setup:
+3 tables: Cars, CustomerAccounts, FinanceRecords
+
+Foreign key setup: financeId in Vehicle is the FK to financeId PK in FinanceRecord, customerId in financeRecord is FK to customerId PK in CustomerAccount.
+
+Vehicle object holds a one-to-one bidirectional relationship with FinanceRecord. Vehicle is the owner object, a FinanceRecord needs a Vehicle to exist. 
+
+FinanceRecord holds a many-to-one relationship with CustomerAccount, as one CustomerAccount can finance multiple Vehicles. Therefore, a CustomerAccount holds a OneToMany relationship with FinanceRecord.
+
+Alongside learning the mappings, I have been altering the JSP and CSS files to improve the visuals of the webapp. I have also used Affinity Designer to create svg images headers for each of the JSPs. Most of this week was spent on refining the CustomerAccount components of this project. With most of the groundwork built, I just need to complete integration of the FinanceRecord component, which will probably be the most difficult. 
