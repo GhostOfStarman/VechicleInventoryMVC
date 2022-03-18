@@ -16,7 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity(name="financeRecords")
+@Entity
 @Table(name="FinanceRecords")
 public class FinanceRecord{
 	
@@ -24,11 +24,6 @@ public class FinanceRecord{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="financeId")
 	private int financeId;
-	
-//	@NotNull(message="cannot be blank")
-//	@Min(value=1, message="cannot be blank")
-//	@Column(name="customerId")
-//	private int customerId;
 	
 	@NotNull(message="cannot be blank")
 	@Min(value=300, message="must be more than 299")
@@ -38,11 +33,11 @@ public class FinanceRecord{
 	
 	@NotNull(message="cannot be blank")
 	@Size(min=17, max=17, message="must be 17 Characters")
-	@Column(name="vin")
+	@Column(name="vehicleIdNumber")
 	private String vehicleIdNumber;
 	
 	@NotNull(message="cannot be blank")
-	@Column(name="VehiclePrice")
+	@Column(name="vehiclePrice")
 	@Min(value=0, message="must be at least $0.00")
 	@Max(value=10000000, message="must be less than $10,000,000")
 	private double vehiclePrice;
@@ -70,7 +65,7 @@ public class FinanceRecord{
 	private double balance;
 	
 	@NotNull(message="cannot be blank")
-	@Column(name="monthlyPmt")
+	@Column(name="monthlyPayment")
 	@Min(value=0, message="must be at least $0.00")
 	private double monthlyPaymentAmount;
 	
@@ -82,13 +77,13 @@ public class FinanceRecord{
 	private boolean paidOff;
 	
 	// Hibernate mappings --------------------------------------------- >
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "financeId")
+	// mappedBy enables a bi-directional relationship, the property name is the name of the field in the Vehicle Class
+	@OneToOne(mappedBy="financeRecord", fetch = FetchType.LAZY)
 	private Vehicle vehicle;
 	
   	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerId")
-    private CustomerAccount CustomerAccount;
+    private CustomerAccount customerAccount;
 
 	// ----------------------------------------------------------------------------------- >
 	// Constructors

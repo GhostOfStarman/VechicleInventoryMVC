@@ -87,8 +87,10 @@ public class Vehicle{
 	// ----------------------------------------------------------------------------------- >
 	
 	// links the PK from FinanceRecord (financeId) table to the FK column in the Cars table (financeId)
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="financeId")
+	// owner of FK column gets @JoinColumn annotation
+	// field can be null if vehicle is not financed
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="financeId", nullable=true)
     private FinanceRecord financeRecord;
 	
 	// ---------------------------------------------------------------------------------------------------------
@@ -267,11 +269,19 @@ public class Vehicle{
 		this.titleStatus = titleStatus;
 	}
 
-	public String getdrivetrainType() {
+	public String getDrivetrainType() {
 		return drivetrainType;
 	}
 
-	public void setdrivetrainType(String drivetrainType) {
+	public FinanceRecord getFinanceRecord() {
+		return financeRecord;
+	}
+
+	public void setFinanceRecord(FinanceRecord financeRecord) {
+		this.financeRecord = financeRecord;
+	}
+
+	public void setDrivetrainType(String drivetrainType) {
 		this.drivetrainType = drivetrainType;
 	}
 

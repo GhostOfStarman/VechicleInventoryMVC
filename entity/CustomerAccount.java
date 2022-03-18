@@ -11,13 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 // entity name maps to CustomerAccountDAOImp methods
-@Entity(name="customerAccounts")
+@Entity
 @Table(name="CustomerAccounts")
 public class CustomerAccount {
 	
@@ -51,10 +49,9 @@ public class CustomerAccount {
 	private String emailAddress;
 	
 	@NotNull(message="cannot be blank")
-	@Min(value=10, message="must be 10 digits")
-	@Max(value=10, message="must be 10 digits")
+	@Size(min=10, max=10, message="must be between 10 digits")
 	@Column(name="phoneNumber")
-	private int phoneNumber;
+	private String phoneNumber;
 	
 	@NotNull(message="cannot be blank")
 	@Size(min=1, max=50, message="must be between 1-50 Characters")
@@ -62,7 +59,7 @@ public class CustomerAccount {
 	private String mailingAddress;
 	
 	// ----------------------------------------------------------------------------------- >
-	@OneToMany(mappedBy="financeId", cascade= {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+	@OneToMany(mappedBy="customerAccount", cascade= {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
 	private List<FinanceRecord> financedVehicles;
 
 	// ----------------------------------------------------------------------------------- >
@@ -79,15 +76,15 @@ public class CustomerAccount {
 		this.username = CustomerAccount;
 		this.password = password;
 	}
-	
-	public CustomerAccount(int id, String CustomerAccountname, String password, String firstName, String lastName, String email, int phoneNo, String address) {
+
+	public CustomerAccount(int id, String CustomerAccountname, String password, String firstName, String lastName, String email, String phoneNo, String address) {
 		this(firstName, lastName, email, phoneNo, address);
 		this.customerId = id;
 		this.username = CustomerAccountname;
 		this.password = password;
 	}
 
-	public CustomerAccount(String firstName, String lastName, String email, int phoneNo, String address){
+	public CustomerAccount(String firstName, String lastName, String email, String phoneNo, String address){
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = email;
@@ -98,6 +95,10 @@ public class CustomerAccount {
 	// ----------------------------------------------------------------------------------- >
 	// Getters/Setters
 
+	public int getCustomerId() {
+		return customerId;
+	}
+
 	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
@@ -105,14 +106,11 @@ public class CustomerAccount {
 	public List<FinanceRecord> getFinancedVehicles() {
 		return financedVehicles;
 	}
-
+	
 	public void setFinancedVehicles(List<FinanceRecord> financedVehicles) {
 		this.financedVehicles = financedVehicles;
 	}
 
-	public void setcustomerId(int customerId) {
-		this.customerId = customerId;
-	}
 
 	public String getUsername() {
 		return username;
@@ -154,11 +152,11 @@ public class CustomerAccount {
 		this.emailAddress = emailAddress;
 	}
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
