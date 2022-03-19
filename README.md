@@ -9,12 +9,12 @@ Abstract: To create a program that manages vehicle inventory data for a car deal
 
 -----------------
 Tools/Technologies:
-IDE: Eclipse 
-Build tools: Maven
-Frameworks: Spring Core, Hibernate
-Database: MySQL + MySQLWorkbench, JDBC
-Server: Apache Tomcat 
-View layer: HTML/CSS + JSP, JSTL
+- IDE: Eclipse 
+- Build tools: Maven
+- Frameworks: Spring Core, Hibernate
+- Database: MySQL + MySQLWorkbench, JDBC
+- Server: Apache Tomcat 
+- View layer: HTML/CSS + JSP, JSTL
 
 -----------------
 - Entities/Models:
@@ -116,7 +116,9 @@ I’m realizing the redundancy of creating a vehicle object and having a databas
 How to deploy application online.
 
 -----------------
-- Credits:
+Credits:
+- 
+
 
 -----------------
 Changelogs
