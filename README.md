@@ -25,7 +25,6 @@ Vehicle fields:
 
 year (int)
 mileage (int)
-
 vehicleIdNumber(String)
 make (String)
 model(String)
@@ -36,7 +35,6 @@ titleStatus (String)
 drivetrainType (String)
 transmissionType (String)
 fuelType (String)
-
 price (double)
 
 - 12/30/21 update: 
@@ -47,7 +45,7 @@ A user class is created. This may be refactored to 'Customer' later. This entity
 
 This has been refactored to 'CustomerAccounts'.
 
-CustomerAccount Fields
+CustomerAccount Fields:
 
 customerId (int)
 Username (String)
@@ -57,11 +55,28 @@ LastName (String)
 emailAddress (String)
 mailingAddress (String)
 phoneNumber (int)
+financedVehicles (FinanceRecord
 
 - 3/18/22 update:
 
 A FinanceRecord class has been in the works for some time but I needed to figure out how to integrate its functionalities with Vehicle and CustomerAccount classes. One of the more challenging parts was to determine how certain fields of the FinanceRecord object would affect other internal fields simultaneously.  Over time, I figured it'd be best to use an amortization formula for scheduled payments and (at this time) omit the ablity to make early payments for simplicity. 
 
+FinanceRecord Fields:
+
+financeId (int)
+creditScore (int)
+termLength (int)
+installmentsPaid (int)
+condition (String)
+vehicleIdNumber (String)
+apr (double)
+vehiclePrice (double) 
+downPayment (double)
+balance (double)
+monthlyPaymentAmount (double)
+paidOff (boolean)
+vehicle (Vehicle)
+customerAccount (CustomerAccount)
 
 -----------------
 - Databasing:
