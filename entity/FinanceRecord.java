@@ -70,7 +70,7 @@ public class FinanceRecord{
 	private double monthlyPaymentAmount;
 	
 	@NotNull(message="cannot be blank")
-	@Column(name="currConditon")
+	@Column(name="currCondition")
 	private String condition;
 	
 	@Column(name="paidOff")
@@ -82,7 +82,7 @@ public class FinanceRecord{
 	private Vehicle vehicle;
 	
   	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerId")
+    @JoinColumn(name = "customerId", nullable=false)
     private CustomerAccount customerAccount;
 
 	// ----------------------------------------------------------------------------------- >
@@ -96,44 +96,40 @@ public class FinanceRecord{
 
 	public FinanceRecord(int financeId, int customerId, String vehicleIdNumber){
 		this.financeId = financeId;
-		//this.customerId = customerId;
 		this.vehicleIdNumber = vehicleIdNumber;
 	}
 
 	
 	public FinanceRecord(int financeId, int creditScore, String vehicleIdNumber, int termLength, double apr, double vehiclePrice, 
-			String currCondition, double downPayment, int installmentsPaid){
+			String condition, double downPayment, int installmentsPaid){
 		
 		this.financeId = financeId;
-		//this.customerId = customerId;
 		this.creditScore = creditScore;
-		this.vehicleIdNumber = vehicleIdNumber.toUpperCase();
+		this.vehicleIdNumber = vehicleIdNumber;
 		
 		this.termLength = termLength;
-		this.condition = currCondition.toUpperCase();
+		this.condition = condition;
 		
-		double annualRate = 0.0;
-		if(currCondition.equals("NEW")) {
-			annualRate = calcPreownedInterestRate(creditScore);
+		if(condition.equals("NEW")) {
+			this.apr = calcPreownedInterestRate(creditScore);
 		}else {
-			annualRate = calcPristineInterestRate(creditScore);
+			this.apr = calcPristineInterestRate(creditScore);
 		}
-		this.apr = annualRate;
 		
 		this.installmentsPaid = installmentsPaid;
-		this.vehiclePrice = priceFormat(vehiclePrice);
+		this.vehiclePrice = priceFormat(vehicle.getPrice());
 		this.downPayment = priceFormat(downPayment);
 		
 		// loan amount is the amount the customer has to borrow
 		double loanAmount = vehiclePrice - downPayment;
-		double monthlyPayment = calcMonthlyPayments(loanAmount, annualRate, termLength);
+		double monthlyPayment = calcMonthlyPayments(loanAmount, this.apr, termLength);
 		this.monthlyPaymentAmount = monthlyPayment;
 		
 		// this is calculating and setting the total amount the customer will pay with interest
 		double outstandingBalance = termLength * monthlyPayment;
 		this.balance = outstandingBalance - (installmentsPaid * monthlyPaymentAmount);
 		
-		this.paidOff = this.balance == 0;
+		this.paidOff = allInstallmentsPaid();
 	}
 
 	// ------------------------------------------------- 
@@ -172,20 +168,24 @@ public class FinanceRecord{
 	}
 
 	// calculating amortized loan
-	public double calcMonthlyPayments(double principal, double apr, int term){
-		apr /= 12;
-		double monthPayments = principal * ((apr * Math.pow((1 + apr), term)/(Math.pow(1 + apr, term) - 1)));
-		return priceFormat(monthPayments);
+	public static double calcMonthlyPayments(double principal, double apr, int term){
+		// dividing by 100 to convert to decimal percentage, then by 12 to get the monthly decimal percentage
+		// therefore dividing by (100 * 12)
+		apr /= 1200;
+		double monthPayments = principal * ((apr * Math.pow((1 + apr), term))/(((Math.pow(1 + apr, term)) - 1)));
+		return monthPayments;
 	}
-
-//	public boolean makePayment(){
-//		balance -= (this.calcMonthlyPayments(this.principal, this.apr, this.termLength)); 
-//		installmentsPaid -= 1;
-//		if(balance > 0){
-//			return true;
-//		}
-//		return false;
-//	}
+	
+	// making a payment
+	public void makePayment(){
+		balance -= monthlyPaymentAmount; 
+		installmentsPaid++;
+		paidOff = (balance <= 0.00);
+	}
+	
+	public boolean allInstallmentsPaid() {
+		return (installmentsPaid == termLength);
+	}
 	
 	// ----------------------------------------------------------------------------------- >
 	// Getters/Setters:
@@ -233,6 +233,14 @@ public class FinanceRecord{
 
 	public void setTermLength(int termLength) {
 		this.termLength = termLength;
+	}
+
+	public CustomerAccount getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(CustomerAccount customerAccount) {
+		this.customerAccount = customerAccount;
 	}
 
 	public int getInstallmentsPaid() {
