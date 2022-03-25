@@ -27,6 +27,12 @@ public class VehicleController {
 	@Autowired
 	VehicleService vehicleService;
 	
+	// button linking to home menu
+	@GetMapping("/mainMenu")
+	public String showMain() {
+		return "redirect:/";
+	}
+	
 	// mapping for listing all vehicles of directory
 	@GetMapping("/listAll")
 	public String listVehicles(Model model) {
@@ -81,6 +87,18 @@ public class VehicleController {
 		return "vehicle-update-form";
 	}
 	
+	// showing finance details page
+	@GetMapping("/showFinanceDetails")
+	public String showFinanceDetails(@RequestParam("vehicleIdNumber") String vin, Model model) {
+		List<FinanceRecord> financeDetail = vehicleService.getVehicleFinanceRecord(vin);
+		if(financeDetail.size() < 1) {
+			return "redirect:/";
+		}
+		model.addAttribute("financeDetail", financeDetail);
+		
+		return "vehicle-finance-details";
+	}
+	
 	// mapping delete link in table
 	@GetMapping("/delete")
 	public String deleteVehicle(@RequestParam("vehicleIdNumber") String vin, Model model) {
@@ -105,7 +123,6 @@ public class VehicleController {
 		vehicleService.deleteCustomerAccount(custId);
 		return "redirect:/inventory/listAccounts";
 	}
-	
 	
 	// shows form for adding new customer 
 	@GetMapping("/addCustomerAccount")
@@ -142,13 +159,19 @@ public class VehicleController {
 		vehicleService.saveCustomerAccount(account);
 		return "redirect:/inventory/listAccounts";
 	}
-	// ------ action links within customer account table ------ >
 	
+	// getting all financed vehicles for a single customer
+	@GetMapping("/showCustomerFinanceDetails")
+	public String showCustomerFinanceDetails(@RequestParam("customerId") int custId, Model model) {
+		List<FinanceRecord> financeRecords = vehicleService.getSingleCustomerFinancedVehicles(custId);
+		model.addAttribute("FinanceRecords", financeRecords);
+		return "customer-finance-details";
+	}
 	
 	// ------------------- FinanceRecord methods ---------------------------------- >
 	
-	// listing all customer accounts
-	@GetMapping("/listFinRecords")
+	// listing all finance records
+	@GetMapping("/listFinanceRecords")
 	public String listFinanceRecords(Model model) {
 		List<FinanceRecord> record = vehicleService.getFinanceRecords();
 		model.addAttribute("FinanceRecord", record);
@@ -156,33 +179,36 @@ public class VehicleController {
 		return "all-finance-records";
 	}
 	
-	// deletes customer account
+	// deletes finance record
 	@GetMapping("/deleteFinanceRecord")
 	public String deleteFinanceRecord(@RequestParam("financeId") int finId, Model model) {
 		vehicleService.deleteCustomerAccount(finId);
-		return "redirect:/inventory/listFinRecords";
+		return "redirect:/inventory/listFinanceRecords";
 	}
 	
-	
-	// shows form for adding new customer 
+	//--------- needs working on ---------------------------------------------------------------------------- >
+	// shows form for adding finance record in all-vehicles.jsp table link
 	@GetMapping("/addFinanceRecord")
 	public String showAddRecordForm(Model model) {
 		CustomerAccount account = new CustomerAccount();
 		model.addAttribute("CustomerAccount", account);
-		return "finance-add-form";
+		return "finance-record-add-form";
 	}
 	
-	// new customer data submission
+	// new finance record data submission
 	@PostMapping("/addFinanceRecordSave")
-	public String addFinanceRecordSave(@Valid @ModelAttribute("FinanceRecord") FinanceRecord record, BindingResult bindingResult) {
+	public String addFinanceRecordSave(@Valid @ModelAttribute("FinanceRecord") FinanceRecord record, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "finance-add-form";
 		}
+		Vehicle car = vehicleService.getVehicle(vin);
+		model.addAttribute("car", car);
+		record.setVehicle(car);
 		vehicleService.saveCustomerAccount(record);
 		return "redirect:/inventory/listFinRecords";
 	}
 	
-	// displays update form for customer account
+	// displays update form for finance record
 	@GetMapping("/showFinanceUpdateForm")
 	public String showFinanceFormForUpdate(@RequestParam("financeId") int finId, Model model) {
 		FinanceRecord record = vehicleService.getFinanceRecord(finId);
@@ -190,14 +216,14 @@ public class VehicleController {
 		return "finance-update-form";
 	}
 	
-	// form for updating customer account/data submission
+	// form for updating finance record/data submission
 	@PostMapping("/updateFinanceRecordSave")
 	public String updateFinanceRecordSave(@Valid @ModelAttribute("FinanceRecord") FinanceRecord record, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "finance-update-form";
 		}
 		vehicleService.saveCustomerAccount(record);
-		return "redirect:/inventory/listFinRecords";
+		return "redirect:/inventory/listFinanceRecords";
 	}
 
 }
